@@ -52,7 +52,23 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           //字段验证通过
-          alert("submit!");
+          //发送请求
+          this.$http.post('login',this.fromData).then(res=>{
+            //   console.log(res);
+            if(res.data.meta.status == 400){
+                //有错误
+                this.$message.error(res.data.meta.msg);
+            }else {
+                //输入正确
+                 this.$message.success(res.data.meta.msg);
+                 //将token存入会话缓存中
+                 window.sessionStorage.setItem('token',res.data.data.token);
+                 //跳转到后台首页
+                 //vue只改变的是router-view里的内容,并没有改变网址,所以不能用location跳转,使用编程式导航
+                 this.$router.push('/');
+            }
+              
+          })
         } else {
           //字段验证失败
           //饿了么UI的消息提示框

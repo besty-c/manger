@@ -10,6 +10,10 @@ import router from './lib/router';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
+//导入axios
+import axios from './lib/http';
+Vue.use(axios);
+
 Vue.use(ElementUI);
 
 new Vue({
