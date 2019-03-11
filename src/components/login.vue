@@ -6,7 +6,7 @@
       status-icon
       ref="ruleForm2"
       label-width="100px"
-      class="demo-ruleForm"
+      class="demo-ruleForm login_form"
       label-position="top"
     >
       <h3>用户登录</h3>
@@ -98,7 +98,7 @@ body {
   align-items: center;
 }
 
-.el-form {
+.el-form.login_form {
   background-color: #fff;
   width: 580px;
   height: 440px;
