@@ -19,7 +19,9 @@
       </el-row>
     </el-header>
     <el-container>
-      <el-aside class="index-aside" width="200px">Aside</el-aside>
+      <el-aside class="index-aside" width="200px">
+        
+      </el-aside>
       <el-main class="index-main">Main</el-main>
     </el-container>
   </el-container>
@@ -27,17 +29,6 @@
 
 <script>
 export default {
-  beforeCreate() {
-    //判断有没有token
-    if (window.sessionStorage.getItem("token")) {
-      //存在token
-    } else {
-      //不存在token
-      //提示不能查看,编程式跳转
-      this.$message.warning("没登录不能查看呢");
-      this.$router.push("/login");
-    }
-  },
   methods: {
     logout() {
       //退出之前进行询问
@@ -54,8 +45,7 @@ export default {
           this.$router.push("/login");
         })
         .catch(() => {
-            //取消
-          
+          //取消
         });
     }
   }
