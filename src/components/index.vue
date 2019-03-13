@@ -20,20 +20,15 @@
     </el-header>
     <el-container>
       <el-aside class="index-aside" width="200px">
-        <el-menu
-          default-active="2"
-          router
-          class="el-menu-vertical-demo"
-        >
-          <el-submenu index="1">
+        <el-menu default-active="2" router class="el-menu-vertical-demo">
+          <el-submenu :index="index+''" v-for="(item,index) in menuList">
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span>用户管理</span>
+              <span>{{item.authName}}</span>
             </template>
             <el-menu-item index="users">
-              <i class="el-icon-menu"></i> 用户列表
-              </el-menu-item>
-
+              <i class="el-icon-menu"></i> {{item.children[0].authName}}
+            </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -46,7 +41,13 @@
 
 <script>
 export default {
+  data() {
+    return {
+      menuList: []
+    };
+  },
   methods: {
+    //退出
     logout() {
       //退出之前进行询问
       this.$confirm("确定要退出吗?", "提示", {
@@ -65,6 +66,12 @@ export default {
           //取消
         });
     }
+  },
+  //菜单页渲染
+  async created() {
+    let res = await this.$http.get("menus");
+    // console.log(res);
+    this.menuList = res.data.data;
   }
 };
 </script>

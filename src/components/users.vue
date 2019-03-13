@@ -1,6 +1,7 @@
 <template>
   <div>
     <!-- 面包屑导航 -->
+    <!-- 抽取面包屑导航,每个页面的导航名称不同 -->
     <el-breadcrumb separator-class="el-icon-arrow-right" class="my_breadcrumb">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>用户管理</el-breadcrumb-item>
