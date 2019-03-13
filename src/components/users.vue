@@ -72,10 +72,12 @@
     </el-table>
     <!-- 分页器 -->
     <el-pagination
-      :page-sizes="[10, 20]"
+      :page-sizes="[5,10,15,20]"
       :page-size="sendData.pagesize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="totalpages"
+      @size-change="changeSize"
+      @current-change="currentPage"
     ></el-pagination>
     <!-- 添加用户的弹框 -->
     <el-dialog title="添加用户" :visible.sync="addformVisible">
@@ -143,7 +145,12 @@
         <el-form-item label="当前用户" prop="username">{{roleform.username}}</el-form-item>
         <el-form-item label="请选择角色">
           <el-select v-model="roleform.role_name" placeholder="请选择活动区域">
-            <el-option v-for="item in rolelist" :key="item.value" :label="item.roleName" :value="item.id"></el-option>
+            <el-option
+              v-for="item in rolelist"
+              :key="item.value"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -270,10 +277,10 @@ export default {
               `users/${this.editform.id}`,
               this.editform
             );
-          } else if(formName == "roleform") {
+          } else if (formName == "roleform") {
             //分配角色
-            res = await this.$http.put(`users/${this.roleform.id}/role`,{
-              rid:this.roleform.role_name,
+            res = await this.$http.put(`users/${this.roleform.id}/role`, {
+              rid: this.roleform.role_name
             });
           }
           if (res.data.meta.status == 201 || res.data.meta.status == 200) {
@@ -338,7 +345,20 @@ export default {
     async changeStatus(item) {
       //发送请求
       await this.$http.put(`users/${item.id}/state/${item.mg_state}`);
+    },
+    //改变页容量
+    changeSize(size){
+      this.sendData.pagesize = size;
+      //重新获取数据
+      this.search();  
+    },
+    currentPage(page){
+      this.sendData.pagenum = page;
+      //重新获取数据
+      this.search();
+      
     }
+
   }
 };
 </script>
