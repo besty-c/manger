@@ -26,8 +26,8 @@
               <i class="el-icon-location"></i>
               <span>{{item.authName}}</span>
             </template>
-            <el-menu-item index="users">
-              <i class="el-icon-menu"></i> {{item.children[0].authName}}
+            <el-menu-item index="users" v-for="it in item.children">
+              <i class="el-icon-menu"></i> {{it.authName}}
             </el-menu-item>
           </el-submenu>
         </el-menu>
