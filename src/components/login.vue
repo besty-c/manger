@@ -57,10 +57,10 @@ export default {
             //   console.log(res);
             if(res.data.meta.status == 400){
                 //有错误
-                this.$message.error(res.data.meta.msg);
+                // this.$message.error(res.data.meta.msg);
             }else {
                 //输入正确
-                 this.$message.success(res.data.meta.msg);
+                //  this.$message.success(res.data.meta.msg);
                  //将token存入会话缓存中
                  window.sessionStorage.setItem('token',res.data.data.token);
                  //跳转到后台首页
