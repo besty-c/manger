@@ -9,7 +9,10 @@
 </template>
 
 <script>
+//导入echarts
 import echarts from 'echarts';
+// 导入jQuery
+import $ from 'jquery';
 export default {
   data() {
     return {
@@ -99,9 +102,15 @@ export default {
     };
   },
   //这个钩子中可以获取到dom元素
-  async mounted() {
-    //获取数据
-    // let res = await this.$http.get()
+   async mounted() {
+    // // 获取数据
+    let res = await this.$http.get('reports/type/1');
+    console.log(res);
+    // 将获取到的数据,合并到option中
+    //使用遍历,或者es6的assign方法,只有浅拷贝
+    //使用jquery的深拷贝方法
+    $.extend(true,this.option,res.data.data);
+    
     // 基于准备好的dom，初始化echarts实例
     //vue中可通过ref获取元素
     var myChart = echarts.init(this.$refs.container);
