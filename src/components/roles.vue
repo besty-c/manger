@@ -11,17 +11,17 @@
           <!-- 最顶级 -->
           <el-row v-for="level1 in props.row.children" class="my_row">
             <el-col :span="6">
-              <el-tag :key="level1.id" closable>{{level1.authName}}</el-tag>
+              <el-tag @close="delOne(level1,props.row)" :key="level1.id" closable>{{level1.authName}}</el-tag>
               <i class="el-icon-arrow-right"></i>
             </el-col>
             <el-col :span="18">
               <el-row v-for="level2 in level1.children">
                 <el-col :span="6">
-                  <el-tag :key="level2.id" closable type="success">{{level2.authName}}</el-tag>
+                  <el-tag @close="delOne(level2,props.row)" :key="level2.id" closable type="success">{{level2.authName}}</el-tag>
                   <i class="el-icon-arrow-right"></i>
                 </el-col>
                 <el-col :span="18">
-                  <el-tag v-for="level3 in level2.children" :key="level3.id" closable type="warning" class="my_tag">{{level3.authName}}</el-tag>
+                  <el-tag @close="delOne(level2,props.row)" v-for="level3 in level2.children" :key="level3.id" closable type="warning" class="my_tag">{{level3.authName}}</el-tag>
                 </el-col>
               </el-row>
             </el-col>
@@ -54,8 +54,20 @@ export default {
     //获取数据
     async getRoles() {
       let res = await this.$http.get("roles");
-      console.log(res);
+      // console.log(res);
       this.tableData5 = res.data.data;
+    },
+    //删除权限
+    async delOne(value,item){
+      // console.log(value); 权限
+      // console.log(item); //角色
+      let res = await this.$http.delete(`roles/${item.id}/rights/${value.id}`);
+      // console.log(res);
+      //返回的数据是操作完成后的权限数据
+      item.children = res.data.data;
+      
+      
+      
     }
   },
   created() {
