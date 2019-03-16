@@ -267,55 +267,80 @@ export default {
       //计算被选中的key(id)
       let ckecklist = [];
       //遍历数据,将id添加到数组中
-      items.children.forEach(v1 => {
-        ckecklist.push(v1.id);
-        v1.children.forEach(v2=>{
-          ckecklist.push(v2.id);
-          v2.children.forEach(v3=>{
-            ckecklist.push(v3.id);
+      //如果父节点被勾选,子节点都被勾选,因此,父节点的id不需要获取
+      //有子节点就添加,没有子节点不添加
+      function getcheckedlist(item){
+        if(item.children){
+          //遍历,直到找到最后一个children
+          items.children.forEach(v => {
+            getcheckedlist(v);
           })
-        })
-      });
+        }else {
+          //没有children 添加
+          ckecklist.push(item.id);
+        }
+      }
+      
       this.checkedkeys = ckecklist;
       // 将当前角色数据保存,方便其他函数中调用
       this.editItem = items;
     },
     //权限分配的点击事件
-     async submit(){
-      //获取当前被选中的多选框的id
-      console.log(this.$refs.tree.getCheckedNodes());
-      let getCheckedNodes = this.$refs.tree.getCheckedNodes();
-      //获取所有选中的节点
-      let checkedIds = [];
-      //遍历数组及子数组中每个id
-      function getchecked(children){
-        if(children){
-          children.forEach(v=>{
-            checkedIds.push(v.id);
-            getchecked(children.children)
-          })
-        }
-      };
-      getchecked(getCheckedNodes);
-      //会有重复的id
-      //去重 es6中的set
-      let set = new Set(checkedIds);
-      //...  展开表达式 将set中的每个元素取出来
+    //  async submit(){
+    //   //获取当前被选中的多选框的id
+    //   console.log(this.$refs.tree.getCheckedNodes());
+    //   let getCheckedNodes = this.$refs.tree.getCheckedNodes();
+    //   //获取所有选中的节点
+    //   let checkedIds = [];
+    //   //遍历数组及子数组中每个id
+    //   function getchecked(children){
+    //     if(children){
+    //       children.forEach(v=>{
+    //         checkedIds.push(v.id);
+    //         getchecked(children.children)
+    //       })
+    //     }
+    //   };
+    //   getchecked(getCheckedNodes);
+    //   //会有重复的id
+    //   //去重 es6中的set
+    //   let set = new Set(checkedIds);
+    //   //...  展开表达式 将set中的每个元素取出来
 
+    //   let res = await this.$http.post(`roles/${this.editItem.id}/rights`,{
+    //     rids:[...set].join(','),
+    //   });
+    //   console.log(res);
+    //   if(res.data.meta.status === 200){
+    //     //关闭对话框
+    //     this.treeVisible = false;
+    //     //刷新页面
+    //     this.getRoles();
+    //   }
+      
+      
+      
+
+    // },
+    //权限分配点击事件 方法2
+    async submit(){
+      //获取当前被选中的id
+      console.log(this.$refs.tree.getCheckedKeys());
+      //获取半选中状态的id---父节点的id
+      //发送请求,只发送子节点的id不能修改成功
+      console.log(this.$refs.tree.getHalfCheckedKeys());
+      let checkedkeys = this.$refs.tree.getCheckedKeys();
+      let halfcheckedkeys = this.$refs.tree.getHalfCheckedKeys();
       let res = await this.$http.post(`roles/${this.editItem.id}/rights`,{
-        rids:[...set].join(','),
+        rids:[...checkedkeys,...halfcheckedkeys].join(','),
       });
-      console.log(res);
       if(res.data.meta.status === 200){
         //关闭对话框
         this.treeVisible = false;
         //刷新页面
-        window.location.reload();
+        this.getRoles();
       }
       
-      
-      
-
     }
   },
   created() {

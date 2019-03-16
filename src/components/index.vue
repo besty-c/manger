@@ -20,7 +20,7 @@
     </el-header>
     <el-container>
       <el-aside class="index-aside" width="200px">
-        <el-menu default-active="2" router class="el-menu-vertical-demo">
+        <el-menu unique-opened default-active="2" router class="el-menu-vertical-demo">
           <el-submenu :index="index+''" v-for="(item,index) in menuList">
             <template slot="title">
               <i class="el-icon-location"></i>
