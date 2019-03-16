@@ -21,13 +21,15 @@
     <el-container>
       <el-aside class="index-aside" width="200px">
         <el-menu unique-opened default-active="2" router class="el-menu-vertical-demo">
-          <el-submenu :index="index+''" v-for="(item,index) in menuList">
+          <!-- 使用vuex中的菜单列表,让其他组件菜单列表修改时可以重新设置到此页面 -->
+          <el-submenu :index="index+''" v-for="(item,index) in this.$store.state.menuList">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>{{item.authName}}</span>
             </template>
             <el-menu-item :index="'/'+it.path" v-for="it in item.children">
-              <i class="el-icon-menu"></i> {{it.authName}}
+              <i class="el-icon-menu"></i>
+              {{it.authName}}
             </el-menu-item>
           </el-submenu>
         </el-menu>
@@ -43,7 +45,7 @@
 export default {
   data() {
     return {
-      menuList: []
+      // menuList: []
     };
   },
   methods: {
@@ -71,7 +73,9 @@ export default {
   async created() {
     let res = await this.$http.get("menus");
     // console.log(res);
-    this.menuList = res.data.data;
+    //调用vuex方法,设置菜单列表
+    this.$store.commit('setMenu',res.data.data);
+    // this.menuList = res.data.data;
   }
 };
 </script>

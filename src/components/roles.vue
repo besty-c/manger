@@ -64,7 +64,13 @@
             plain
             size="mini"
           ></el-button>
-          <el-button @click="getRights(scope.row)" type="success" icon="el-icon-check" plain size="mini"></el-button>
+          <el-button
+            @click="getRights(scope.row)"
+            type="success"
+            icon="el-icon-check"
+            plain
+            size="mini"
+          ></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -168,9 +174,9 @@ export default {
       },
       treedata: {},
       //树形控件被选中的部分
-      checkedkeys:[],
+      checkedkeys: [],
       //角色数据
-      editItem:{},
+      editItem: {}
     };
   },
   methods: {
@@ -269,18 +275,18 @@ export default {
       //遍历数据,将id添加到数组中
       //如果父节点被勾选,子节点都被勾选,因此,父节点的id不需要获取
       //有子节点就添加,没有子节点不添加
-      function getcheckedlist(item){
-        if(item.children){
+      function getcheckedlist(item) {
+        if (item.children) {
           //遍历,直到找到最后一个children
-          items.children.forEach(v => {
+          item.children.forEach(v => {
             getcheckedlist(v);
-          })
-        }else {
+          });
+        } else {
           //没有children 添加
           ckecklist.push(item.id);
         }
-      }
-      
+      };
+      getcheckedlist(items);
       this.checkedkeys = ckecklist;
       // 将当前角色数据保存,方便其他函数中调用
       this.editItem = items;
@@ -317,30 +323,32 @@ export default {
     //     //刷新页面
     //     this.getRoles();
     //   }
-      
-      
-      
 
     // },
     //权限分配点击事件 方法2
-    async submit(){
+    async submit() {
       //获取当前被选中的id
-      console.log(this.$refs.tree.getCheckedKeys());
+      // console.log(this.$refs.tree.getCheckedKeys());
       //获取半选中状态的id---父节点的id
       //发送请求,只发送子节点的id不能修改成功
-      console.log(this.$refs.tree.getHalfCheckedKeys());
+      // console.log(this.$refs.tree.getHalfCheckedKeys());
       let checkedkeys = this.$refs.tree.getCheckedKeys();
       let halfcheckedkeys = this.$refs.tree.getHalfCheckedKeys();
-      let res = await this.$http.post(`roles/${this.editItem.id}/rights`,{
-        rids:[...checkedkeys,...halfcheckedkeys].join(','),
+      let res = await this.$http.post(`roles/${this.editItem.id}/rights`, {
+        rids: [...checkedkeys, ...halfcheckedkeys].join(",")
       });
-      if(res.data.meta.status === 200){
+      if (res.data.meta.status === 200) {
         //关闭对话框
         this.treeVisible = false;
         //刷新页面
         this.getRoles();
+        //重新获取菜单
+        //权限变了,可以看得到的内容也要变
+        let res = await this.$http.get("menus");
+        // console.log(res);
+        //调用vuex方法,设置菜单列表
+        this.$store.commit("setMenu", res.data.data);
       }
-      
     }
   },
   created() {
